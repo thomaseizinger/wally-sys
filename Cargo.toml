@@ -9,3 +9,6 @@ edition = "2018"
 [build-dependencies]
 autotools = "0.2"
 bindgen = "0.53.2"
+
+[lib]
+crate-type = ["staticlib"]
