@@ -38,6 +38,7 @@ fn main() {
         .blacklist_item("WALLY_OK")  // value redefined because interpreted as u32 instead of i32
         .blacklist_item("strtold")   // return non-ffi safe u128
         .clang_arg("-DBUILD_ELEMENTS")
+        .rustfmt_bindings(true)
         .generate()
         .expect("unable to generate bindings");
 

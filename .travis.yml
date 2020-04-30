@@ -1,0 +1,10 @@
+language: rust
+
+rust:
+  - stable
+
+script:
+  - cargo build
+
+before_install:
+  - rustup component add rustfmt
