@@ -1,0 +1,11 @@
+[package]
+name = "wally-sys"
+version = "0.1.0"
+authors = ["Riccardo Casatta <riccardo@casatta.it>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[build-dependencies]
+autotools = "0.2"
+bindgen = "0.53.2"
