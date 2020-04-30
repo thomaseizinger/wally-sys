@@ -16,6 +16,7 @@ fn main() {
         .enable("elements", None)
         .enable_static()
         .disable_shared()
+        .with("pic", None)
         .build();
 
     println!("cargo:rustc-link-search=native={}", dst.join("lib").display());
