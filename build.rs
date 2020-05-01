@@ -36,8 +36,8 @@ fn main() {
         .header("libwally-core/include/wally_script.h")
         .header("libwally-core/include/wally_symmetric.h")
         .header("libwally-core/include/wally_transaction.h")
+        .size_t_is_usize(true)
         .blacklist_item("WALLY_OK")  // value redefined because interpreted as u32 instead of i32
-        .blacklist_item("strtold")   // return non-ffi safe u128
         .clang_arg("-DBUILD_ELEMENTS")
         .rustfmt_bindings(true)
         .generate()
