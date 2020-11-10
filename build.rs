@@ -1,14 +1,23 @@
 // build.rs
 
+use std::env::var;
 use std::path::{Path, PathBuf};
 use std::process::Command;
-use std::env::var;
 
 fn main() {
     let dir = "./libwally-core";
+    if !Path::new(&format!("{}/.git", dir)).exists() {
+        Command::new("git")
+            .args(&["submodule", "update", "--init", "--recursive"])
+            .status()
+            .unwrap();
+    }
     let configure = format!("{}/configure", &dir);
     if !Path::new(&configure).exists() {
-        let status = Command::new("./tools/autogen.sh").current_dir(dir).status().unwrap();
+        let status = Command::new("./tools/autogen.sh")
+            .current_dir(dir)
+            .status()
+            .unwrap();
         assert!(status.success());
     }
 
@@ -19,7 +28,10 @@ fn main() {
         .with("pic", None)
         .build();
 
-    println!("cargo:rustc-link-search=native={}", dst.join("lib").display());
+    println!(
+        "cargo:rustc-link-search=native={}",
+        dst.join("lib").display()
+    );
     println!("cargo:rustc-link-lib=static=wallycore");
     println!("cargo:rustc-link-lib=static=secp256k1");
 
@@ -37,7 +49,7 @@ fn main() {
         .header("libwally-core/include/wally_symmetric.h")
         .header("libwally-core/include/wally_transaction.h")
         .size_t_is_usize(true)
-        .blacklist_item("WALLY_OK")  // value redefined because interpreted as u32 instead of i32
+        .blacklist_item("WALLY_OK") // value redefined because interpreted as u32 instead of i32
         .clang_arg("-DBUILD_ELEMENTS")
         .rustfmt_bindings(true)
         .generate()
