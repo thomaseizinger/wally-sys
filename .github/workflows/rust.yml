@@ -16,4 +16,9 @@ jobs:
       - uses: actions-rs/cargo@v1
         with:
           command: build
+      - name: Upload bindings
+        uses: actions/upload-artifact@v2
+        with:
+          name: bindings.rs
+          path: "target/debug/build/wally-sys-*/out/bindings.rs"
 
