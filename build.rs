@@ -23,6 +23,8 @@ fn main() {
 
     let dst = autotools::Config::new("libwally-core")
         .enable("elements", None)
+        .disable("swig-python", None)
+        .disable("swig-java", None)
         .enable_static()
         .disable_shared()
         .with("pic", None)
@@ -34,6 +36,18 @@ fn main() {
     );
     println!("cargo:rustc-link-lib=static=wallycore");
     println!("cargo:rustc-link-lib=static=secp256k1");
+
+    let wasm_target = if cfg!(target_arch = "wasm32") {
+        "-target wasm32"
+    } else {
+        ""
+    };
+
+    let visibility = if cfg!(target_arch = "wasm32") {
+        "-fvisibility=default"
+    } else {
+        ""
+    };
 
     // generate bindings using bindgen
     let bindings = bindgen::Builder::default()
@@ -50,7 +64,7 @@ fn main() {
         .header("libwally-core/include/wally_transaction.h")
         .size_t_is_usize(true)
         .blacklist_item("WALLY_OK") // value redefined because interpreted as u32 instead of i32
-        .clang_arg("-DBUILD_ELEMENTS")
+        .clang_args(&["-DBUILD_ELEMENTS", wasm_target, visibility])
         .rustfmt_bindings(true)
         .generate()
         .expect("unable to generate bindings");
