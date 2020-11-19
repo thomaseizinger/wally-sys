@@ -37,18 +37,6 @@ fn main() {
     println!("cargo:rustc-link-lib=static=wallycore");
     println!("cargo:rustc-link-lib=static=secp256k1");
 
-    let wasm_target = if cfg!(target_arch = "wasm32") {
-        "-target wasm32"
-    } else {
-        ""
-    };
-
-    let visibility = if cfg!(target_arch = "wasm32") {
-        "-fvisibility=default"
-    } else {
-        ""
-    };
-
     // generate bindings using bindgen
     let bindings = bindgen::Builder::default()
         .header("libwally-core/include/wally_address.h")
@@ -64,7 +52,7 @@ fn main() {
         .header("libwally-core/include/wally_transaction.h")
         .size_t_is_usize(true)
         .blacklist_item("WALLY_OK") // value redefined because interpreted as u32 instead of i32
-        .clang_args(&["-DBUILD_ELEMENTS", wasm_target, visibility, "-I/usr/include"])
+        .clang_args(&["-DBUILD_ELEMENTS", "-target wasm32", "-fvisibility=default", "-I/usr/include"])
         .rustfmt_bindings(true)
         .generate()
         .expect("unable to generate bindings");
