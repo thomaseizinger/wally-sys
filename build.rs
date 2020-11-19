@@ -64,7 +64,7 @@ fn main() {
         .header("libwally-core/include/wally_transaction.h")
         .size_t_is_usize(true)
         .blacklist_item("WALLY_OK") // value redefined because interpreted as u32 instead of i32
-        .clang_args(&["-DBUILD_ELEMENTS", wasm_target, visibility])
+        .clang_args(&["-DBUILD_ELEMENTS", wasm_target, visibility, "-I/usr/include"])
         .rustfmt_bindings(true)
         .generate()
         .expect("unable to generate bindings");
